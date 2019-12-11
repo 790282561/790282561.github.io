@@ -79,12 +79,14 @@
 
 
 
+<meta name="description" content="2019.12.11更新 GAN网络训练阶段分析 基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析  DCGAN的概念DCGAN网络（deep convolution generative adversual networks），在GAN网络的基础上增加深度卷积网络结构，专门生成图像样本 网络训练阶段的思路在《python深度学习》中提到，GAN网络训练阶段的步">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&#39;GAN网络的分析&#39;">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;index.html">
 <meta property="og:site_name" content="Portfolio">
+<meta property="og:description" content="2019.12.11更新 GAN网络训练阶段分析 基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析  DCGAN的概念DCGAN网络（deep convolution generative adversual networks），在GAN网络的基础上增加深度卷积网络结构，专门生成图像样本 网络训练阶段的思路在《python深度学习》中提到，GAN网络训练阶段的步">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-04T13:46:57.339Z">
+<meta property="og:updated_time" content="2019-12-11T16:20:49.473Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -295,7 +297,36 @@
       
 
       
-        
+        <p>2019.12.11更新</p>
+<h2 id="GAN网络训练阶段分析"><a href="#GAN网络训练阶段分析" class="headerlink" title="GAN网络训练阶段分析"></a>GAN网络训练阶段分析</h2><blockquote>
+<p>基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析</p>
+</blockquote>
+<h3 id="DCGAN的概念"><a href="#DCGAN的概念" class="headerlink" title="DCGAN的概念"></a>DCGAN的概念</h3><p>DCGAN网络（deep convolution generative adversual networks），在GAN网络的基础上增加深度卷积网络结构，专门生成图像样本</p>
+<h3 id="网络训练阶段的思路"><a href="#网络训练阶段的思路" class="headerlink" title="网络训练阶段的思路"></a>网络训练阶段的思路</h3><p>在《python深度学习》中提到，GAN网络训练阶段的步骤为以下几步，并且后续代码实现也是围绕该步骤来实现的：</p>
+<ol>
+<li>在潜在空间中抽取随机的点（随机噪声）</li>
+<li>利用这个随机噪声用genenrator生成图像</li>
+<li>将生成图像与真是图像混合</li>
+<li>使用这些混合后的图像以及相应的标签（真实图像为“真”， 生成图像为“假”）来训练discriminator</li>
+<li>在潜在空间中随机抽取新的点</li>
+<li>使用这些随机向量以及全部是“真实图像”的标签来训练gan。这会更新生成器的权重，其更新方向是使得判别器能够将生成图像预测为“真实图像”</li>
+</ol>
+<h3 id="代码实现研究"><a href="#代码实现研究" class="headerlink" title="代码实现研究"></a>代码实现研究</h3><p>基于以上代码实现，找到了两个代码源，其一是GitHub上的<a href="https://github.com/790282561/Keras-GAN/blob/master/dcgan/dcgan.py" target="_blank" rel="noopener">Keras-GAN项目</a>，其二是《python深度学习》中的代码实现。今天先对github上项目进行分析，训练部分代码源如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self, epochs, batch_size=<span class="number">128</span>, save_interval=<span class="number">50</span>)</span>:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="comment"># Load the dataset</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    (X_train, _), (_, _) = mnist.load_data()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="comment"># Rescale -1 to 1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    X_train = X_train / <span class="number">127.5</span> - <span class="number">1.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    X_train = np.expand_dims(X_train, axis=<span class="number">3</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    <span class="comment"># Adversarial ground truths</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    valid = np.ones((batch_size, <span class="number">1</span>))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    fake = np.zeros((batch_size, <span class="number">1</span>))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># ---------------------</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">#  Train Discriminator</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># ---------------------</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># Select a random half of images</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">        idx = np.random.randint(<span class="number">0</span>, X_train.shape[<span class="number">0</span>], batch_size)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        imgs = X_train[idx]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># Sample noise and generate a batch of new images</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">        noise = np.random.normal(<span class="number">0</span>, <span class="number">1</span>, (batch_size, self.latent_dim))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        gen_imgs = self.generator.predict(noise)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># Train the discriminator (real classified as ones and generated as zeros)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">        d_loss_real = self.discriminator.train_on_batch(imgs, valid)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">        d_loss_fake = self.discriminator.train_on_batch(gen_imgs, fake)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">        d_loss = <span class="number">0.5</span> * np.add(d_loss_real, d_loss_fake)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># ---------------------</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">#  Train Generator</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># ---------------------</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># Train the generator (wants discriminator to mistake images as real)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">        g_loss = self.combined.train_on_batch(noise, valid)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># Plot the progress</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">print</span> (<span class="string">"%d [D loss: %f, acc.: %.2f%%] [G loss: %f]"</span> % (epoch, d_loss[<span class="number">0</span>], <span class="number">100</span>*d_loss[<span class="number">1</span>], g_loss))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">        <span class="comment"># If at save interval =&gt; save generated image samples</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> epoch % save_interval == <span class="number">0</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">            self.save_imgs(epoch)</span></pre></td></tr></table></figure>
+<p>&ensp;&ensp;该函数是首先加载mnist数据集并做归一化处理，X_train = np.expand_dims(X_train, axis=3)实际上等价于常用的reshape操作<strong>x_train = x_train.reshape((-1, 28, 28, 1))</strong>  。然后按照每个batch_size样本的数量设置valid和fake标签。  </p>
+<p>&ensp;&ensp;for循环的作用实际上相当于fit()函数中的epochs参数。之后进入循环。</p>
+<p>&ensp;&ensp;imgs实际上相当于fit()函数中的batch_size参数，idx用randint随机从样本中抽取batch_size个样本作为每步的样本数量。<br>再下一步，生成器对噪点生成图像。noise和gen_img是我不理解的部分，其作用是随机采用噪声，但是有两点困惑：  </p>
+<ol>
+<li>为什么用正态分布数组进行生成</li>
+<li>为什么形状是(batch_size, latent_dim)</li>
+</ol>
+<p>&ensp;&ensp;接下来，用discriminator对正确的图像和伪造的图像进行训练并且混合。混合使用的方法是np.add()，并且乘以0.5系数归一。<br>&ensp;&ensp;在下一步，用之前生成的随机噪声noise和正确标签valid对整个gan网络(combined)进行训练。<br>&ensp;&ensp;最后是图像的保存，每迭代一定次数之后保存图片</p>
+<h3 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h3><ol>
+<li>train_on_batch()和fit()作比较<br>fit是将大批量的数据进行训练，参数输入epochs,batch_size等参数。train_on_batch是手动将小批量数据添加到模型中的函数</li>
+<li>图像保存<br>在 keras.preprocessing.image中，可以用array_to_img()函数将向量转为图像，再配合img.save()保存</li>
+<li>np.expand_dim(x, axis=3)<br>会在对应的维度上再添加一个维度</li>
+</ol>
+
       
     </div>
     
@@ -379,8 +410,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -422,6 +462,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GAN网络训练阶段分析"><span class="nav-number">1.</span> <span class="nav-text">GAN网络训练阶段分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DCGAN的概念"><span class="nav-number">1.1.</span> <span class="nav-text">DCGAN的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络训练阶段的思路"><span class="nav-number">1.2.</span> <span class="nav-text">网络训练阶段的思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现研究"><span class="nav-number">1.3.</span> <span class="nav-text">代码实现研究</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识点"><span class="nav-number">1.4.</span> <span class="nav-text">知识点</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
