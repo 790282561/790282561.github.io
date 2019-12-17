@@ -86,8 +86,11 @@
 <meta property="og:site_name" content="Portfolio">
 <meta property="og:description" content="2019.12.11更新 GAN网络训练阶段分析 基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析  DCGAN的概念DCGAN网络（deep convolution generative adversual networks），在GAN网络的基础上增加深度卷积网络结构，专门生成图像样本 网络训练阶段的思路在《python深度学习》中提到，GAN网络训练阶段的步">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-11T16:20:49.473Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;generated_num450.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;%E8%BF%87%E6%8B%9F%E5%90%88%E7%9A%84loss%E5%80%BC.png">
+<meta property="og:updated_time" content="2019-12-17T15:01:53.043Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;generated_num450.png">
 
 
 
@@ -324,7 +327,19 @@
 <h3 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h3><ol>
 <li>train_on_batch()和fit()作比较<br>fit是将大批量的数据进行训练，参数输入epochs,batch_size等参数。train_on_batch是手动将小批量数据添加到模型中的函数</li>
 <li>图像保存<br>在 keras.preprocessing.image中，可以用array_to_img()函数将向量转为图像，再配合img.save()保存</li>
-<li>np.expand_dim(x, axis=3)<br>会在对应的维度上再添加一个维度</li>
+<li>np.expand_dim(x, axis=3)<br>会在对应的维度上再添加一个维度  </li>
+</ol>
+<p>2019.12.17更新</p>
+<h2 id="GAN网络的模型部分分析"><a href="#GAN网络的模型部分分析" class="headerlink" title="GAN网络的模型部分分析"></a>GAN网络的模型部分分析</h2><p>对搭建好的gan网络进行了分析，有一些感悟和问题，需要进行思考。训练阶段发现一个问题，即是电脑的配置无法达到gan网络的配置要求，训练非常缓慢，故最多训练到到450次迭代之后就停止了运行，此时图像为雪花点。 </p>
+<p><img src="generated_num450.png" alt="450次迭代的生成图像"></p>
+<h3 id="训练部分代码的问题反思"><a href="#训练部分代码的问题反思" class="headerlink" title="训练部分代码的问题反思"></a>训练部分代码的问题反思</h3><p>首先，对上阶段训练部分代码的问题进行反思，对参考代码的两个问题进行回答。  </p>
+<ol>
+<li>为什么要使用正态分布数组作为生成网络的输入。这是gan网络的一个技巧，在《python深度学习》中有对gan网络的技巧做梳理总结。<pre><code>·使用tanh作为生成器最后一层的激活，而不用sigmoid，后者在其他类型的模型中更加常见
+·使用正态分布（高斯分布）对潜在空间中的点进行采样，而不用均匀分布
+·随机性能够提高稳健性。训练GAN得到的是一个动态平衡，所以GAN可能以各种方式“卡住”。在训练过程中引入随机性有助于防止出现这种情况，通过两种方式引入随机性：在判别器中使用dropout；向判别器的标签添加噪声。
+·稀疏的梯度会妨碍GAN网络训练。在深度学习中，稀疏性通常是需要的属性，但是在GAN中并非如此。两个情况会导致梯度系数：最大池化、ReLU激活。可以使用步进卷积代替最大池化进行下采样，还推荐使用LeakyReLU层代替ReLU激活。LeakyReLU和ReLU类似，但它运行较小的负数激活值，从而放宽了稀疏性限制。
+·在生成的图像中，经常会见到棋盘状伪影，这是由生成器中像素空间的不均匀覆盖导致的。为解决这个问题，每当在生成器和判别器中都使用步进的Conv2DTranpose或Conv2D时，使用的内核大小要能够被步幅大小整除。</code></pre></li>
+<li>为什么形状是(batch_size, latent_dim)<br>这是由generator的输入网络决定的，generator输入latent_dim的形状数据，得到对应的28*28图像数组<h3 id="现阶段遇到的问题"><a href="#现阶段遇到的问题" class="headerlink" title="现阶段遇到的问题"></a>现阶段遇到的问题</h3>在运行之后，遇到部分问题无法解决。当网络在几次迭代之后，就会进入过拟合，generator和discriminator的loss值都不会再变化。既然这样为什么还要迭代4000之多，最终会形成伪造图像么？<br><img src="%E8%BF%87%E6%8B%9F%E5%90%88%E7%9A%84loss%E5%80%BC.png" alt="两部分的loss值都不再变化"><br>其次，如何得到良好的generator和discriminator，各个层的工作原理和方法是怎样的。<h3 id="下一步工作"><a href="#下一步工作" class="headerlink" title="下一步工作"></a>下一步工作</h3>首先可以按照案例当中的代码示例，将gan网络用class重构。其次下一步可以对各个层的关心进行研究，找出其中的逻辑关系。</li>
 </ol>
 
       
@@ -472,7 +487,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GAN网络训练阶段分析"><span class="nav-number">1.</span> <span class="nav-text">GAN网络训练阶段分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DCGAN的概念"><span class="nav-number">1.1.</span> <span class="nav-text">DCGAN的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络训练阶段的思路"><span class="nav-number">1.2.</span> <span class="nav-text">网络训练阶段的思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现研究"><span class="nav-number">1.3.</span> <span class="nav-text">代码实现研究</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识点"><span class="nav-number">1.4.</span> <span class="nav-text">知识点</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GAN网络训练阶段分析"><span class="nav-number">1.</span> <span class="nav-text">GAN网络训练阶段分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DCGAN的概念"><span class="nav-number">1.1.</span> <span class="nav-text">DCGAN的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络训练阶段的思路"><span class="nav-number">1.2.</span> <span class="nav-text">网络训练阶段的思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现研究"><span class="nav-number">1.3.</span> <span class="nav-text">代码实现研究</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识点"><span class="nav-number">1.4.</span> <span class="nav-text">知识点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GAN网络的模型部分分析"><span class="nav-number">2.</span> <span class="nav-text">GAN网络的模型部分分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#训练部分代码的问题反思"><span class="nav-number">2.1.</span> <span class="nav-text">训练部分代码的问题反思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现阶段遇到的问题"><span class="nav-number">2.2.</span> <span class="nav-text">现阶段遇到的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下一步工作"><span class="nav-number">2.3.</span> <span class="nav-text">下一步工作</span></a></li></ol></li></ol></div>
             
 
           </div>
