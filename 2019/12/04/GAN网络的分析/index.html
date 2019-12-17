@@ -79,16 +79,16 @@
 
 
 
-<meta name="description" content="2019.12.11更新 GAN网络训练阶段分析 基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析  DCGAN的概念DCGAN网络（deep convolution generative adversual networks），在GAN网络的基础上增加深度卷积网络结构，专门生成图像样本 网络训练阶段的思路在《python深度学习》中提到，GAN网络训练阶段的步">
+<meta name="description" content="深度学习看完教程之后，对GAN网络的生成模式非常感兴趣，故决定参考教程，自己基于mnist数据集搭建GAN网络，深度理解网路的形成思路。2019.12.11更新  GAN网络训练阶段分析基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析 DCGAN的概念DCGAN网络（deep convolution generative adversual networks）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="&#39;GAN网络的分析&#39;">
+<meta property="og:title" content="GAN网络的分析">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;index.html">
 <meta property="og:site_name" content="Portfolio">
-<meta property="og:description" content="2019.12.11更新 GAN网络训练阶段分析 基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析  DCGAN的概念DCGAN网络（deep convolution generative adversual networks），在GAN网络的基础上增加深度卷积网络结构，专门生成图像样本 网络训练阶段的思路在《python深度学习》中提到，GAN网络训练阶段的步">
+<meta property="og:description" content="深度学习看完教程之后，对GAN网络的生成模式非常感兴趣，故决定参考教程，自己基于mnist数据集搭建GAN网络，深度理解网路的形成思路。2019.12.11更新  GAN网络训练阶段分析基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析 DCGAN的概念DCGAN网络（deep convolution generative adversual networks）">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;generated_num450.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;%E8%BF%87%E6%8B%9F%E5%90%88%E7%9A%84loss%E5%80%BC.png">
-<meta property="og:updated_time" content="2019-12-17T15:01:53.043Z">
+<meta property="og:updated_time" content="2019-12-17T15:08:10.390Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;generated_num450.png">
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>'GAN网络的分析' | Portfolio</title>
+  <title>GAN网络的分析 | Portfolio</title>
   
 
 
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">'GAN网络的分析'</h1>
+          <h1 class="post-title" itemprop="name headline">GAN网络的分析</h1>
         
 
         <div class="post-meta">
@@ -300,10 +300,10 @@
       
 
       
-        <p>2019.12.11更新</p>
-<h2 id="GAN网络训练阶段分析"><a href="#GAN网络训练阶段分析" class="headerlink" title="GAN网络训练阶段分析"></a>GAN网络训练阶段分析</h2><blockquote>
-<p>基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析</p>
+        <blockquote>
+<p>深度学习看完教程之后，对GAN网络的生成模式非常感兴趣，故决定参考教程，自己基于mnist数据集搭建GAN网络，深度理解网路的形成思路。<br>2019.12.11更新</p>
 </blockquote>
+<h2 id="GAN网络训练阶段分析"><a href="#GAN网络训练阶段分析" class="headerlink" title="GAN网络训练阶段分析"></a>GAN网络训练阶段分析</h2><p>基于mnist数据集生成gan网络的步骤中，对训练阶段的思路不是很清楚，对其进行剖析</p>
 <h3 id="DCGAN的概念"><a href="#DCGAN的概念" class="headerlink" title="DCGAN的概念"></a>DCGAN的概念</h3><p>DCGAN网络（deep convolution generative adversual networks），在GAN网络的基础上增加深度卷积网络结构，专门生成图像样本</p>
 <h3 id="网络训练阶段的思路"><a href="#网络训练阶段的思路" class="headerlink" title="网络训练阶段的思路"></a>网络训练阶段的思路</h3><p>在《python深度学习》中提到，GAN网络训练阶段的步骤为以下几步，并且后续代码实现也是围绕该步骤来实现的：</p>
 <ol>
