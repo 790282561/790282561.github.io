@@ -86,8 +86,12 @@
 <meta property="og:site_name" content="Portfolio">
 <meta property="og:description" content="生成式网络有很多种，比较重要的也容易操作的有GAN、VAE，上一步已经简单对对抗生成网络进行了编写和分析，接下来对VAE网络进行分析和操作。  VAE网络的概念 变分自编码器的组成：由编码器和解码器组成，两部分可以拆分 普通自编码器，是一张图片编码后，得到隐含向量再解码。但这样无法控制隐含向量。 VAE（Variational Auto Encoder）,在编码过程中增加一些限制，迫使生成的隐含">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-01-01T15:38:37.416Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E5%88%86%E7%B1%BB%E7%82%B9%E4%BA%91%E5%9B%BE_20200101.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E5%9B%BE%E5%83%8F%E5%88%86%E5%B8%83_20200101.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE_20200101.png">
+<meta property="og:updated_time" content="2020-01-01T16:02:17.650Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;%E5%88%86%E7%B1%BB%E7%82%B9%E4%BA%91%E5%9B%BE_20200101.png">
 
 
 
@@ -348,8 +352,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vae &#x3D; Model(x, x_decoded_mean)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">vae.add_loss(vae_loss_define)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">vae.compile(optimizer&#x3D;&#39;rmsprop&#39;)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">vae.summary()</span></pre></td></tr></table></figure>
 <p>网络最后进行训练</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">cae.fit(x_train,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    shuffle&#x3D;True,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    epochs&#x3D;epochs,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    batch_size&#x3D;batch_size,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    validation_data&#x3D;(x_test, None))</span></pre></td></tr></table></figure>
-<p>网络训练好之后可以将encoder和decoder拆分为两部分，encoder可以查看各标签的分类关系。decoder可以将正态分布的数据传入，形成数据图像。</p>
-<h2 id="待解决问题"><a href="#待解决问题" class="headerlink" title="待解决问题"></a>待解决问题</h2><p>按class划分的网络，形成的decoder无法训练出清晰的数据图像，<a href="/images/训练数据_20200101.png">数据图像内容</a>，可能是decoder单独传入正态分布数据的问题。</p>
+<p>网络训练好之后可以将encoder和decoder拆分为两部分，encoder可以查看各标签的分类关系。decoder可以将正态分布的数据传入，形成数据图像。<br><img src="/images/%E5%88%86%E7%B1%BB%E7%82%B9%E4%BA%91%E5%9B%BE_20200101.png" alt="训练结果的标签分类"><br><img src="/images/%E5%9B%BE%E5%83%8F%E5%88%86%E5%B8%83_20200101.png" alt="训练结果的生成图像"></p>
+<h2 id="待解决问题"><a href="#待解决问题" class="headerlink" title="待解决问题"></a>待解决问题</h2><p>按class划分的网络，形成的decoder无法训练出清晰的数据图像，可能是decoder单独传入正态分布数据的问题。<img src="/images/%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE_20200101.png" alt="数据图像内容"></p>
 
       
     </div>
