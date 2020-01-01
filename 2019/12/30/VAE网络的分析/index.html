@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="生成式网络有很多种，比较重要的也容易操作的有GAN、VAE，上一步已经简单对对抗生成网络进行了编写和分析，接下来对VAE网络进行分析和操作。  VAE网络的概念 变分自编码器的组成：由编码器和解码器组成，两部分可以拆分 普通自编码器，是一张图片编码后，得到隐含向量再解码。但这样无法控制隐含向量。 VAE（Variational Auto Encoder）,在编码过程中增加一些限制，迫使生成的隐含">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VAE网络的分析">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;30&#x2F;VAE%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90&#x2F;index.html">
+<meta property="og:site_name" content="Portfolio">
+<meta property="og:description" content="生成式网络有很多种，比较重要的也容易操作的有GAN、VAE，上一步已经简单对对抗生成网络进行了编写和分析，接下来对VAE网络进行分析和操作。  VAE网络的概念 变分自编码器的组成：由编码器和解码器组成，两部分可以拆分 普通自编码器，是一张图片编码后，得到隐含向量再解码。但这样无法控制隐含向量。 VAE（Variational Auto Encoder）,在编码过程中增加一些限制，迫使生成的隐含">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-01-01T15:38:37.416Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/30/VAE网络的分析/"/>
+
+
+
+
+
+  <title>VAE网络的分析 | Portfolio</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Portfolio</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/30/VAE%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zhang Jun">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Portfolio">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">VAE网络的分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-30T14:20:44+08:00">
+                2019-12-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>生成式网络有很多种，比较重要的也容易操作的有GAN、VAE，上一步已经简单对对抗生成网络进行了编写和分析，接下来对VAE网络进行分析和操作。</p>
+</blockquote>
+<h2 id="VAE网络的概念"><a href="#VAE网络的概念" class="headerlink" title="VAE网络的概念"></a>VAE网络的概念</h2><ul>
+<li>变分自编码器的组成：由编码器和解码器组成，两部分可以拆分<ul>
+<li>普通自编码器，是一张图片编码后，得到隐含向量再解码。但这样无法控制隐含向量。</li>
+<li>VAE（Variational Auto Encoder）,在编码过程中增加一些限制，迫使生成的隐含向量粗略遵循标准正态分布。</li>
+</ul>
+</li>
+<li>伪代码实现<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">z_mean, z_log_variance = encoder(input_img)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">z = z_mean + exp(<span class="number">0.5</span> * z_log_variance) * epsilon</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">reconstructed_img = decoder(z)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">model = Model(input_img, reconstructed_img)</span></pre></td></tr></table></figure>
+<ul>
+<li>在训练过程中，因为损失包含在自定义层中，所以在编译中无需指定外部损失，即loss=None，这意味着训练中不需要传入目标数据，y=None<h2 id="VAE网络的原理"><a href="#VAE网络的原理" class="headerlink" title="VAE网络的原理"></a>VAE网络的原理</h2></li>
+</ul>
+</li>
+<li>普通autoencoder的问题<ul>
+<li>想在生成式模型中使得输入向量与输出结果存在一定关系，比如说向量生成了一片树叶，向量生成了三片树叶，介于向量之间的向量可以生成两片树叶，这在传统autoencoder中无法做到。</li>
+</ul>
+</li>
+<li>VAE对这一问题的解决<ul>
+<li>解决传统自编码器这一问题的思路是，将大的噪声添加到编码过程中，使得生成图像的向量z具有一定的分布。比如在训练中，一片树叶原本对应着一个向量，但在添加噪声并经过训练后，处于这两个分布交叉部分的向量就有可能生成两片树叶的图像，因为从数值点到分布的转化就意味着要和两边都相似。单纯利用解码器作为生成器的时候，需要给定服从该分布的随机向量，这样就有更大的可能性生成想要的图像。</li>
+<li>最简单的训练方法是遵循正态分布</li>
+</ul>
+</li>
+<li>正态分布的均值和平方差，都是从神经网络中学到，是从另一个正态分布中采样得到的。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">z &#x3D; a + bx</span></pre></td></tr></table></figure>
+<ul>
+<li>只有a没有b，这和普通自编码器没有区别，所以要对b做出限制，应在loss中添加惩罚项，使得z的编码分布更像标准的正态分布。越接近正态分布，loss越小，这可以用KL散度（相对熵）j计算当前分布与标准正态分布的差异.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kl_loss &#x3D; 0.5 * (-log(b^2) + b^2 - 1 + a^2)</span></pre></td></tr></table></figure></li>
+<li>x的采样，可以利用keras后端生成服从标准正态分布的变量，将其写作一个函数，模型每向前传播一次，就调用一次<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">from keras import backend as K</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">def sampling(args):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    z_mean, z_log_var &#x3D; args</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    epsilon &#x3D; K.random_normal(shape&#x3D;(dim,), mean&#x3D;0, std&#x3D;1)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    return (z_mean + (z_sigma)*epsilon)</span></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>再部署loss<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">from keras import binary_crossentropy</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">def vae_loss(x, y):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    ent_loss &#x3D; binary_crossentropy(x, y)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    kl_loss &#x3D; -0.5 * K.mean(1+z_sigma*z_sigma - K.square(z_mean) &#x2F; K.log(z_sigma * z_sigma), axis&#x3D;-1)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    return ent_loss + kl_loss</span></pre></td></tr></table></figure>
+<h2 id="VAE网络的代码实现"><a href="#VAE网络的代码实现" class="headerlink" title="VAE网络的代码实现"></a>VAE网络的代码实现</h2>目前的代码实现尝试了两种结构方法，一种是使用class封装，另一种是按过程编写。具体代码位置<blockquote>
+<p><a href="https://github.com/790282561/ml_exc/tree/master/VAE%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8" target="_blank" rel="noopener">https://github.com/790282561/ml_exc/tree/master/VAE%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8</a>  </p>
+</blockquote>
+</li>
+</ul>
+<p>总体上讲，vae网络是在encoder和decoder之间，用均值和平方差对数据转换租出干预，再封装到Lambda层当中，最后对loss进行相应处理。<br>尝试的两种代码的思路，首先对mnist数据进行归一化处理，这部分我经常记不住，然而这是一种范式，需要参考和理解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">from tensorflow.keras.datasets import mnist</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">(x_train, y_train), (x_test, y_test) &#x3D; mnist.load_data()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">x_train &#x3D; x_train.astype(&#39;float32&#39;) &#x2F; 255.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">x_test &#x3D; x_test.astype(&#39;float32&#39;) &#x2F; 255.</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">x_train &#x3D; x_train.reshape((-1, 784))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">x_test &#x3D; x_test.reshape((-1, 784))</span></pre></td></tr></table></figure>
+<p>接着构建encoder部分。该部分将28*28的张量压缩到2个维度,即均值和平方差。压缩过程采用了两层Dense层实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">x &#x3D; Input(shape&#x3D;(original_dim,))  # 该处逗号表示还有其他情况</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">h &#x3D; Dense(intermediate_dim, activation&#x3D;&#39;relu&#39;)(x)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">z_mean &#x3D; Dense(latent_dim)(h)  #z_mean和z_log_var不激活</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">z_log_var &#x3D; Dense(latent_dim)(h)</span></pre></td></tr></table></figure>
+<p>压缩之后，给定一个标准正态分布，帮助z_mean和z_log_var采样。这里封装成了一个函数,并借用后端backend的函数。最后依据KL损失的公式，返回采样结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">from tensorflow.keras import backend as K</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">def sampling(args):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    z_mean, z_log_var &#x3D; args</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    epsilon &#x3D; K.random_normal(shape&#x3D;K.shape(z_mean))  # epsilon为随机参数，但符合正态分布</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    return z_mean + K.exp(z_log_var &#x2F; 2) * epsilon</span></pre></td></tr></table></figure>
+<p>这里的sampling需要通过Lambda层传递给后面的decoder。keras中Lambda层不参与迭代，只适用于数据的计算封装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">z &#x3D; Lambda(sampling, output_shape&#x3D;(latent_dim,))([z_mean, z_log_var])</span></pre></td></tr></table></figure>
+<p>中间阶段计算完成之后，数据增加了大量的正态分布的噪点，将其传入decoder部分，代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">decoder_h &#x3D; Dense(intermediate_dim, activation&#x3D;&#39;relu&#39;)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">decoder_mean &#x3D; Dense(original_dim, activation&#x3D;&#39;sigmoid&#39;)  # 用sigmoid激活</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">h_decoded &#x3D; decoder_h(z)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">x_decoded_mean &#x3D; decoder_mean(h_decoded)</span></pre></td></tr></table></figure>
+<p>需要重新设定网络的损失函数，构建相应的函数添加到网络中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">def vae_loss_define(x, x_decoded_mean, z_mean, z_log_var):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    xent_loss &#x3D; K.sun(K.binary_crossentropy(x, x_decoded_mean), axis&#x3D;-1)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    kl_loss &#x3D; -0.5 * K.sum(1 + z_log_var - K.square(z_mean) - K.exp(z_log_var), axis&#x3D;-1)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    vae_loss &#x3D; K.mean(xent_loss + kl_loss)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    return vae_loss</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">vae_loss &#x3D; vae_loss_define(x, x_decoded_mean, z_mean, z_log_var)</span></pre></td></tr></table></figure>
+<p>用Model构建网络实例，将设置好的损失函数添加到其中，用方法add_loss（该方法用于灵活添加损失函数）并调试函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">vae &#x3D; Model(x, x_decoded_mean)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">vae.add_loss(vae_loss_define)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">vae.compile(optimizer&#x3D;&#39;rmsprop&#39;)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">vae.summary()</span></pre></td></tr></table></figure>
+<p>网络最后进行训练</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">cae.fit(x_train,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    shuffle&#x3D;True,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    epochs&#x3D;epochs,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    batch_size&#x3D;batch_size,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    validation_data&#x3D;(x_test, None))</span></pre></td></tr></table></figure>
+<p>网络训练好之后可以将encoder和decoder拆分为两部分，encoder可以查看各标签的分类关系。decoder可以将正态分布的数据传入，形成数据图像。</p>
+<h2 id="待解决问题"><a href="#待解决问题" class="headerlink" title="待解决问题"></a>待解决问题</h2><p>按class划分的网络，形成的decoder无法训练出清晰的数据图像，<a href="/images/训练数据_20200101.png">数据图像内容</a>，可能是decoder单独传入正态分布数据的问题。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/04/GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90/" rel="next" title="GAN网络的分析">
+                <i class="fa fa-chevron-left"></i> GAN网络的分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Zhang Jun</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#VAE网络的概念"><span class="nav-number">1.</span> <span class="nav-text">VAE网络的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VAE网络的原理"><span class="nav-number">2.</span> <span class="nav-text">VAE网络的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VAE网络的代码实现"><span class="nav-number">3.</span> <span class="nav-text">VAE网络的代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#待解决问题"><span class="nav-number">4.</span> <span class="nav-text">待解决问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhang Jun</span>
+
+  
+</div>
+
+
+  <div class="powered-by">GitHub: <a class="theme-link" target="_blank" href="https://github.com/790282561">A_Goblin</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Email: 790282561@qq.com</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
