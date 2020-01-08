@@ -79,14 +79,14 @@
 
 
 
-<meta name="description" content="总体未来发展几个维度相互支持  设计 编程 扩展   编程维度编程维度：以pytho为主语言，以javascript为辅助语言，未来可能需要学习golang。编程分为基础和应用两个方面。  基础 python算法 python语法   应用 网络开发 Django_后端 flask javascript_前端（网络前端和设计结合非常密切，下一步应该考虑的方向）   爬虫 requests和sele">
+<meta name="description" content="sklearn基础 机器学习的分类：监督学习（有人工标注的标签）、无监督学习（无人工标注）、半监督学习、强化学习、深度学习 scikit-learn：一组简单有效的数据集；依赖numpy, scipy, matplotlib；开源、可复用 sklearn的六个模块：选择模型，数据预处理，分类，回归，聚类，降维 分类任务：最近邻算法，neighbors，Nearest Neighbors，支持向量机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="未来发展的技能框架">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;03&#x2F;%E6%9C%AA%E6%9D%A5%E5%8F%91%E5%B1%95%E7%9A%84%E6%80%9D%E8%80%83&#x2F;index.html">
+<meta property="og:title" content="Scikit-learn学习笔记">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;08&#x2F;sklearn%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0&#x2F;index.html">
 <meta property="og:site_name" content="Portfolio">
-<meta property="og:description" content="总体未来发展几个维度相互支持  设计 编程 扩展   编程维度编程维度：以pytho为主语言，以javascript为辅助语言，未来可能需要学习golang。编程分为基础和应用两个方面。  基础 python算法 python语法   应用 网络开发 Django_后端 flask javascript_前端（网络前端和设计结合非常密切，下一步应该考虑的方向）   爬虫 requests和sele">
+<meta property="og:description" content="sklearn基础 机器学习的分类：监督学习（有人工标注的标签）、无监督学习（无人工标注）、半监督学习、强化学习、深度学习 scikit-learn：一组简单有效的数据集；依赖numpy, scipy, matplotlib；开源、可复用 sklearn的六个模块：选择模型，数据预处理，分类，回归，聚类，降维 分类任务：最近邻算法，neighbors，Nearest Neighbors，支持向量机">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-19T17:18:43.560Z">
+<meta property="og:updated_time" content="2020-01-08T16:25:51.411Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -117,13 +117,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/12/03/未来发展的思考/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/01/08/sklearn学习笔记/"/>
 
 
 
 
 
-  <title>未来发展的技能框架 | Portfolio</title>
+  <title>Scikit-learn学习笔记 | Portfolio</title>
   
 
 
@@ -230,7 +230,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/03/%E6%9C%AA%E6%9D%A5%E5%8F%91%E5%B1%95%E7%9A%84%E6%80%9D%E8%80%83/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/08/sklearn%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zhang Jun">
@@ -247,7 +247,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">未来发展的技能框架</h1>
+          <h1 class="post-title" itemprop="name headline">Scikit-learn学习笔记</h1>
         
 
         <div class="post-meta">
@@ -259,8 +259,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-03T00:25:10+08:00">
-                2019-12-03
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-08T22:41:44+08:00">
+                2020-01-08
               </time>
             
 
@@ -297,90 +297,143 @@
       
 
       
-        <h2 id="总体"><a href="#总体" class="headerlink" title="总体"></a>总体</h2><p>未来发展几个维度相互支持</p>
-<ul>
-<li>设计</li>
-<li>编程</li>
-<li>扩展</li>
-</ul>
-<hr>
-<h2 id="编程维度"><a href="#编程维度" class="headerlink" title="编程维度"></a>编程维度</h2><p>编程维度：以pytho为主语言，以javascript为辅助语言，未来可能需要学习golang。编程分为基础和应用两个方面。</p>
-<ul>
-<li>基础<ul>
-<li>python算法</li>
-<li>python语法</li>
+        <h2 id="sklearn基础"><a href="#sklearn基础" class="headerlink" title="sklearn基础"></a>sklearn基础</h2><ul>
+<li>机器学习的分类：监督学习（有人工标注的标签）、无监督学习（无人工标注）、半监督学习、强化学习、深度学习</li>
+<li>scikit-learn：一组简单有效的数据集；依赖numpy, scipy, matplotlib；开源、可复用</li>
+<li>sklearn的六个模块：选择模型，数据预处理，分类，回归，聚类，降维<ul>
+<li>分类任务：最近邻算法，neighbors，Nearest Neighbors，支持向量机，SVM，SVC，朴素贝叶斯，决策树，集成方法，神经网络</li>
+<li>回归任务：linear_model，岭回归，Lasso回归，弹性回归，最小角回归，贝叶斯回归，逻辑回归，多项式回归</li>
+<li>聚类任务：cluster， K_means，AP聚类，均值漂移，层次聚类，DBSCAN，BIRCH，谱聚类</li>
+<li>降维任务：PCA, NMF</li>
 </ul>
 </li>
-<li>应用<ul>
-<li>网络开发<ul>
-<li>Django_后端</li>
-<li>flask</li>
-<li>javascript_前端（<strong>网络前端和设计结合非常密切，下一步应该考虑的方向</strong>）</li>
+<li>sklearn的安装，pip install scikit-learn  </li>
+</ul>
+<h2 id="sklearn数据集"><a href="#sklearn数据集" class="headerlink" title="sklearn数据集"></a>sklearn数据集</h2><ul>
+<li>sklearn内涵数据集  <table>
+<thead>
+<tr>
+<th>数据集名称</th>
+<th>调用函数</th>
+<th>适用算法</th>
+<th>数据规模</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>波士顿房价数据集</td>
+<td>load_boston()</td>
+<td>回归</td>
+<td>506*13</td>
+</tr>
+<tr>
+<td>鸢尾花数据集</td>
+<td>load_iris()</td>
+<td>分类</td>
+<td>150*4</td>
+</tr>
+<tr>
+<td>糖尿病数据集</td>
+<td>load_diabetes()</td>
+<td>回归</td>
+<td>442*10</td>
+</tr>
+<tr>
+<td>手写数字数据集</td>
+<td>load_digits()</td>
+<td>分类</td>
+<td>5620*64</td>
+</tr>
+<tr>
+<td>Olivetti脸部图像数据集</td>
+<td>fetch_olivetti_faces()</td>
+<td>降维</td>
+<td>400<em>64</em>64</td>
+</tr>
+<tr>
+<td>新闻分类数据集</td>
+<td>fetch_20newsgroups()</td>
+<td>分类</td>
+<td></td>
+</tr>
+<tr>
+<td>带标签的人脸数据集</td>
+<td>fetch_lfw_people()</td>
+<td>分类，降维</td>
+<td></td>
+</tr>
+<tr>
+<td>路透社新闻预料数据集</td>
+<td>fetch_rcvl()</td>
+<td>分类</td>
+<td>804414*47236</td>
+</tr>
+</tbody></table>
+</li>
+<li>数据集调用<ul>
+<li>数据集都集中在：sklearn.datasets</li>
 </ul>
 </li>
-<li>爬虫<ul>
-<li>requests和selenium，动态/静态爬取</li>
-<li>mysql或mongodb（<strong>一直是痛点，没有针对的去学习</strong>）</li>
-<li>beautifulsoup/pyquery/lxml解析库</li>
-<li>scrapy框架式爬取</li>
-</ul>
-</li>
-<li>数据分析<ul>
-<li>numpy数据结构</li>
-<li>pandas数据处理</li>
-<li>matplotlib数据可视化</li>
-</ul>
-</li>
-<li>机器学习<ul>
-<li>深度学习：keras, tensorflow, pytorch</li>
-<li>机器学习：scikitlearn（<strong>最近需要学习的部分，主要是它不吃GPU</strong>）</li>
-</ul>
-</li>
-<li>胶水作用<ul>
-<li>python for rhino（完成建模和编程的关联，需要再rhino界面下打开edit中的rhino python editor）</li>
-</ul>
+<li>波士顿房价数据集<ul>
+<li>sklearn.datasets.load_boston()  </li>
+<li>参数：return_X_y，表示是否返回target（标签），默认False，只返回data（数据内容）<pre><code class="python"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_boston
+boston = load_boston()
+print(boston.data)
+data, targets = load_boston(return_X_y=<span class="literal">True</span>)  <span class="comment"># 同时返回数据和标签</span></code></pre>
 </li>
 </ul>
 </li>
-</ul>
-<hr>
-<h2 id="设计维度"><a href="#设计维度" class="headerlink" title="设计维度"></a>设计维度</h2><ul>
-<li>软件<ul>
-<li>绘图、3D建模及渲染<ul>
-<li>CAD</li>
-<li>Revit</li>
-<li>Rhino</li>
-<li>Sketchup</li>
-<li>vray</li>
-</ul>
-</li>
-<li>2D<ul>
-<li>Photoshop</li>
-<li>Illustration</li>
-<li>Indesign</li>
-</ul>
-</li>
-<li>泛化设计（建筑设计之外，想扩展设计必须要学习）<ul>
-<li>Ae</li>
-<li>Pr</li>
-<li>C4D</li>
-<li>Unity</li>
-</ul>
-</li>
-<li>浏览阅读<ul>
-<li>广泛的阅读项目，建筑设计、平面设计</li>
-<li>dribbble</li>
-<li>pinterest</li>
-</ul>
+<li>鸢尾花数据集<ul>
+<li>数据集共三类，每类中有四个维度（萼片长度，萼片宽度，花瓣长度，花瓣宽度）</li>
+<li>sklearn.datasets.iris()</li>
+<li>参数：return_X_y，默认False，返回全部信息</li>
+<li>属性：data, target, target_name<pre><code class="python"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris
+iris = load_iris()
+print(iris.data, iris.target, iris.target_name)</code></pre>
 </li>
 </ul>
 </li>
+<li>手写数字数据集<ul>
+<li>sklearn.datasets.load_digits()</li>
+<li>参数：n_class，表示返回数据的类别，如n_class=5则返回0-4数据样本</li>
+<li>属性：data, target, image  </li>
 </ul>
-<hr>
-<h2 id="信息"><a href="#信息" class="headerlink" title="信息"></a>信息</h2><ul>
-<li>阅读（思想扩展）</li>
-<li>游戏（兴趣扩展）</li>
-<li>运动（健康扩展）</li>
+</li>
+</ul>
+<h2 id="无监督学习-聚类"><a href="#无监督学习-聚类" class="headerlink" title="无监督学习_聚类"></a>无监督学习_聚类</h2><ul>
+<li>聚类，就是根据数据的“相似性”将数据分为多类的过程。评估两个不同样本之间的“相似性”，通常使用的方法是计算两样本的“距离”，不同的方法会<br>影响聚类结果的好坏。</li>
+<li>距离计算方法  <table>
+<thead>
+<tr>
+<th>计算方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>欧式距离</td>
+<td></td>
+</tr>
+<tr>
+<td>曼哈顿距离</td>
+<td>“城市街区距离”，从一个十字街口到另一个十字街口的距离</td>
+</tr>
+<tr>
+<td>马氏距离</td>
+<td>表示数据的协方差距离，是一种尺度无关的度量方式，会将样本点的各个属性标准化，再计算样本间距离</td>
+</tr>
+<tr>
+<td>夹角余弦</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li>聚类模块：sklearn.cluster<ul>
+<li>sklearn.cluster模块，提供的各聚类算法函数可以使用不同的数据形式作为输入</li>
+<li>标准输入格式：[样本个数， 特征个数]</li>
+<li>相似性矩阵输入格式：即由[样本数目]定义的矩阵形式，矩阵中的每个元素为两个样本的相似度（DBSCAN，近邻传播算法），矩阵中每个元素<br>的取值范围为[0, 1]  </li>
+</ul>
+</li>
+<li>K-means<h2 id="无监督学习-降维"><a href="#无监督学习-降维" class="headerlink" title="无监督学习_降维"></a>无监督学习_降维</h2></li>
+<li>降维，在保证数据所具有的代表性特征或者分布的情况下，将高维数据转化为低维数据的过程。用于数据可视化、精简数据。分类和降维之间存在<br>关联，某些高维数据的分类可以通过降维处理更好的获得。同时某些方法，如分类算法k-means与降维算法的NMF之间存在等价性。<h2 id="监督学习-分类"><a href="#监督学习-分类" class="headerlink" title="监督学习_分类"></a>监督学习_分类</h2><h2 id="监督学习-回归"><a href="#监督学习-回归" class="headerlink" title="监督学习_回归"></a>监督学习_回归</h2></li>
 </ul>
 
       
@@ -406,15 +459,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/12/30/VAE%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90/" rel="next" title="VAE网络的分析">
+                <i class="fa fa-chevron-left"></i> VAE网络的分析
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/12/04/GAN%E7%BD%91%E7%BB%9C%E7%9A%84%E5%88%86%E6%9E%90/" rel="prev" title="GAN网络的分析">
-                GAN网络的分析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -528,7 +581,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总体"><span class="nav-number">1.</span> <span class="nav-text">总体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编程维度"><span class="nav-number">2.</span> <span class="nav-text">编程维度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计维度"><span class="nav-number">3.</span> <span class="nav-text">设计维度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息"><span class="nav-number">4.</span> <span class="nav-text">信息</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sklearn基础"><span class="nav-number">1.</span> <span class="nav-text">sklearn基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sklearn数据集"><span class="nav-number">2.</span> <span class="nav-text">sklearn数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无监督学习-聚类"><span class="nav-number">3.</span> <span class="nav-text">无监督学习_聚类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无监督学习-降维"><span class="nav-number">4.</span> <span class="nav-text">无监督学习_降维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监督学习-分类"><span class="nav-number">5.</span> <span class="nav-text">监督学习_分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监督学习-回归"><span class="nav-number">6.</span> <span class="nav-text">监督学习_回归</span></a></li></ol></div>
             
 
           </div>
