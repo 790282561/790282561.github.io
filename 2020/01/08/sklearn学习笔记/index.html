@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Portfolio">
 <meta property="og:description" content="sklearn基础 机器学习的分类：监督学习（有人工标注的标签）、无监督学习（无人工标注）、半监督学习、强化学习、深度学习 scikit-learn：一组简单有效的数据集；依赖numpy, scipy, matplotlib；开源、可复用 sklearn的六个模块：选择模型，数据预处理，分类，回归，聚类，降维 分类任务：最近邻算法，neighbors，Nearest Neighbors，支持向量机">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-01-08T16:25:51.411Z">
+<meta property="og:updated_time" content="2020-01-11T18:00:42.102Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -375,31 +375,22 @@
 </li>
 <li>波士顿房价数据集<ul>
 <li>sklearn.datasets.load_boston()  </li>
-<li>参数：return_X_y，表示是否返回target（标签），默认False，只返回data（数据内容）<pre><code class="python"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_boston
-boston = load_boston()
-print(boston.data)
-data, targets = load_boston(return_X_y=<span class="literal">True</span>)  <span class="comment"># 同时返回数据和标签</span></code></pre>
-</li>
+<li>参数：return_X_y，表示是否返回target（标签），默认False，只返回data（数据内容）  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_boston</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">boston = load_boston()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">print(boston.data)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">data, targets = load_boston(return_X_y=<span class="literal">True</span>)  <span class="comment"># 同时返回数据和标签</span></span></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li>鸢尾花数据集<ul>
 <li>数据集共三类，每类中有四个维度（萼片长度，萼片宽度，花瓣长度，花瓣宽度）</li>
 <li>sklearn.datasets.iris()</li>
 <li>参数：return_X_y，默认False，返回全部信息</li>
-<li>属性：data, target, target_name<pre><code class="python"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris
-iris = load_iris()
-print(iris.data, iris.target, iris.target_name)</code></pre>
-</li>
+<li>属性：data, target, target_name  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">iris = load_iris()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">print(iris.data, iris.target, iris.target_name)</span></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li>手写数字数据集<ul>
 <li>sklearn.datasets.load_digits()</li>
 <li>参数：n_class，表示返回数据的类别，如n_class=5则返回0-4数据样本</li>
-<li>属性：data, target, image  </li>
+<li>属性：data, target, image  <h2 id="无监督学习-聚类"><a href="#无监督学习-聚类" class="headerlink" title="无监督学习_聚类"></a>无监督学习_聚类</h2></li>
 </ul>
 </li>
-</ul>
-<h2 id="无监督学习-聚类"><a href="#无监督学习-聚类" class="headerlink" title="无监督学习_聚类"></a>无监督学习_聚类</h2><ul>
 <li>聚类，就是根据数据的“相似性”将数据分为多类的过程。评估两个不同样本之间的“相似性”，通常使用的方法是计算两样本的“距离”，不同的方法会<br>影响聚类结果的好坏。</li>
 <li>距离计算方法  <table>
 <thead>
@@ -429,11 +420,223 @@ print(iris.data, iris.target, iris.target_name)</code></pre>
 <li>聚类模块：sklearn.cluster<ul>
 <li>sklearn.cluster模块，提供的各聚类算法函数可以使用不同的数据形式作为输入</li>
 <li>标准输入格式：[样本个数， 特征个数]</li>
-<li>相似性矩阵输入格式：即由[样本数目]定义的矩阵形式，矩阵中的每个元素为两个样本的相似度（DBSCAN，近邻传播算法），矩阵中每个元素<br>的取值范围为[0, 1]  </li>
+<li>相似性矩阵输入格式：即由[样本数目]定义的矩阵形式，矩阵中的每个元素为两个样本的相似度（DBSCAN，近邻传播算法），矩阵中每个元素的取值范围为[0, 1]  </li>
 </ul>
 </li>
-<li>K-means<h2 id="无监督学习-降维"><a href="#无监督学习-降维" class="headerlink" title="无监督学习_降维"></a>无监督学习_降维</h2></li>
-<li>降维，在保证数据所具有的代表性特征或者分布的情况下，将高维数据转化为低维数据的过程。用于数据可视化、精简数据。分类和降维之间存在<br>关联，某些高维数据的分类可以通过降维处理更好的获得。同时某些方法，如分类算法k-means与降维算法的NMF之间存在等价性。<h2 id="监督学习-分类"><a href="#监督学习-分类" class="headerlink" title="监督学习_分类"></a>监督学习_分类</h2><h2 id="监督学习-回归"><a href="#监督学习-回归" class="headerlink" title="监督学习_回归"></a>监督学习_回归</h2></li>
+<li>K-means<ul>
+<li>概念：以k为参数，把n个对象分成k个簇，使簇内具有较高的相似度，而簇间的相似度较低</li>
+<li>算法步骤：随机选择k个点作为初始的聚类中心。对剩下的点，根据其与聚类中心的距离，将其归入最近的簇。对每个簇计算所有点的均值作为新的聚类中心。重复2、3步骤直到聚类中心不再发生变化。</li>
+<li>函数  <ul>
+<li>sklearn.cluster.KMeans()</li>
+<li>参数：<ul>
+<li>n_cluster，用于指定聚类中心的个数</li>
+<li>init，初始聚类中心的初始化方法，默认为k-means++</li>
+<li>max_iter，最大的迭代次数，默认为300</li>
+</ul>
+</li>
+<li>训练方法：fit_predict()，计算簇中心以及为簇分配序号</li>
+<li>属性：km.cluster_centers_，返回簇中心  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DBSCAN<ul>
+<li>概念：将数据点分为三类，即核心点、边界点、噪声点。其中核心点指在半径Eps内含有超过MinPts数目的点；边界点指在半径Eps的点数量小于MinPts，但是落在核心点的邻域内；噪声点指既不是核心点也不是边界点的数据点  </li>
+<li>算法步骤：<ul>
+<li>取Eps=3，MinPts=3，依据DBSCAN对所有点进行聚类</li>
+<li>对每个点计算其邻域Eps=3内点的集合（集合内点的个数超过MinPts=3的点为核心点）</li>
+<li>查看剩余点是否在核心点的邻域内，若在则为边界点，否则为噪声点</li>
+<li>将距离不超过Eps=3的点互相连接，构成一个簇，核心点邻域内的点也会被加入到簇中</li>
+</ul>
+</li>
+<li>函数<ul>
+<li>sklearn.cluster.DBSCAN()</li>
+<li>参数：<ul>
+<li>eps，两个样本被看作邻居节点的最大距离</li>
+<li>min_sample，簇的样本数</li>
+<li>metric，距离计算方式，可选’euclidean’</li>
+</ul>
+</li>
+<li>训练方法：fit()<h2 id="无监督学习-降维"><a href="#无监督学习-降维" class="headerlink" title="无监督学习_降维"></a>无监督学习_降维</h2></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>降维，在保证数据所具有的代表性特征或者分布的情况下，将高维数据转化为低维数据的过程。用于数据可视化、精简数据。分类和降维之间存在关联，某些高维数据的分类可以通过降维处理更好的获得。同时某些方法，如分类算法k-means与降维算法的NMF之间存在等价性。</li>
+<li>PCA（主成分分析）<ul>
+<li>概念：最常用的降维方法，通常用于高维数据即得探索与可视化，同时可以用作数据压缩和预处理。PCA可以把具有相关性的高维变量合称为线性无关的低维变量，称为主成分。主成分能够尽可能保留原始数据的信息</li>
+<li>相关术语：<ul>
+<li>方差：各样本与平均值的差的平方和的均值，用来度量一组数据的分散程度</li>
+<li>协方差：两个变量在变化过程中是同向还是反向，同向（反向）程度如何（同向为正，反向为负），绝对值越大同向（反向）程度越高</li>
+<li>协方差矩阵：多维数据的协方差计算，需要协方差的一个矩阵数列</li>
+</ul>
+</li>
+<li>算法原理：矩阵主成分是其协方差矩阵对应的特征向量，按照对应的特征值大小进行排序，最大的特征值是第一主成分，其次是第二主成分，以此类推</li>
+<li>函数<ul>
+<li>sklearn.decomposition.PCA()</li>
+<li>参数：<ul>
+<li>n_components，主成分个数，即降维后的数据维度</li>
+<li>svd_solver，设置特征分解的方法，默认为auto，其他可选有’full’，’arpack’，’randomized’</li>
+</ul>
+</li>
+<li>训练方法：<ul>
+<li>fit_transform(x)，用x来训练PCA模型，同时返回降维后的数据</li>
+<li>fit(x)，用x来训练PCA模型</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>NMF（非负矩阵分解法）<ul>
+<li>概念：在矩阵中所有元素均为非负数约束条件之下的矩阵分解方法</li>
+<li>算法原理：给定一个非负矩阵V，NMF能够找到两个非负矩阵W、H，使得矩阵W和H的乘积近似等于矩阵V的值。其中W矩阵为基础图象矩阵，相当于从原矩阵V中抽取出来的特征。H矩阵是系数矩阵。目的在于最小化W，H矩阵的乘积，和原始矩阵之间的差距。</li>
+<li>函数：<ul>
+<li>sklearn.decomposition.NMF()</li>
+<li>参数：<ul>
+<li>n_components，用于指定分解后矩阵的单位维度k</li>
+<li>init，W矩阵和H矩阵的初始化方法，默认nndscdar</li>
+<li>whiten，True或False，即是否白化，使得每个特征具有相同的方差</li>
+</ul>
+</li>
+<li>属性：<ul>
+<li>components_，返回特征</li>
+<li>n_components_，返回特征数量  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="监督学习-分类"><a href="#监督学习-分类" class="headerlink" title="监督学习_分类"></a>监督学习_分类</h2><ul>
+<li>概念及铺垫<ul>
+<li>当输出数据是离散的，学习任务为分类学习。分类学习的输入为有标签的数据；输出为学习得到适合这组数据的分类器，当新数据需要进行分类，就可以传入其中；喂料需要训练姐和测试集（标注隐藏），一组数据需要70%作为训练数据。</li>
+<li>sklearn中，分类算法并未统一封装于一个子模块中。</li>
+</ul>
+</li>
+<li>K折验证的sklearn实现<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sklearn.model_selection.cross_val_score()，折验证的主函数</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">cross_val_score(clf, iris.data, iris.target, cv=<span class="number">10</span>)  <span class="comment"># cv为K折数量</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sklearn.model_selection.train_test_split()，从样本中随机的按比例选取train data和test data</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">poly = PolynomialFeatures(<span class="number">6</span>)  <span class="comment"># 采用6次方多项式</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">x = poly.fit_transform(x)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=<span class="number">0.3</span>, randomstate=<span class="number">0</span>)  <span class="comment"># test_size表示测试集比例，randomstate为测试数据种子</span></span></pre></td></tr></table></figure></li>
+<li>KNN（K近邻）<ul>
+<li>概念：通过计算待分类数据点，与已有数据集中的所有数据点的距离。距离最小的前K个点，根据“少数服从多数”的原则，将这个数据点划分为出现次数最多的那个类别</li>
+<li>函数<ul>
+<li>sklearn.neighbors.KNeighborsClassfier()</li>
+<li>参数<ul>
+<li>n_neighbors，用于指定分类器中K的大小（默认值为5）</li>
+<li>weights，设置选中的K个点对分类结果影响的权重（默认值为平均权重’uniform’，可以选择’distance’代表越近的点权重越高，或传入自己编写的以距离为参数的权重计算函数）</li>
+<li>algorithm，设置用于计算临近点的方法（默认为auto，因为当数据量大时，当前点和所有点的距离计算量大，此处需优化）</li>
+</ul>
+</li>
+<li>训练方法<ul>
+<li>fit(x, y)，x为值，y为标签</li>
+<li>predict(x)，为新样本预测</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>决策树<ul>
+<li>概念：是一种树形结构的分类器，通过顺序询问分类点的属性决定分类点最终的类别</li>
+<li>函数<ul>
+<li>sklearn.tree.DecisionTreeClassifier()</li>
+<li>参数<ul>
+<li>criterion，用于选择属性的准则，’gini’基尼系数，’entropy’信息增益</li>
+<li>max_features，表示在决策树结点进行分裂时，从多少个特征中选择最优特征，可以设定固定数目，百分比或其他标准。默认值是使用所有特征个数</li>
+</ul>
+</li>
+<li>训练方法<ul>
+<li>fit(x, y)</li>
+<li>predict(x)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>朴素贝叶斯<ul>
+<li>概念：以贝叶斯定理为基础的多分类的分类器。</li>
+<li>函数<ul>
+<li>sklearn.naive_bayes.GaussianNB()  # 高斯朴素贝叶斯</li>
+<li>参数<ul>
+<li>priors，给定各个类别的先验概率，如果为空，则按训练数据的实际情况机型统计；如果给定先验概率，则在训练过程中不能更改</li>
+</ul>
+</li>
+<li>训练方法<ul>
+<li>fit(x, y)，训练预处理器</li>
+<li>transform(x)，生成预处理结果<h2 id="监督学习-回归"><a href="#监督学习-回归" class="headerlink" title="监督学习_回归"></a>监督学习_回归</h2></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>概念：目标在于了解两个或多个变数间是否相关，研究其相关方向与强度。回归分为线性和非线性回归。只有一个自变量是简单回归；大于一个变量为多元回归<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sklearn.linear_model  # 线性回归</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">sklearn.preprocessing  # 非线性回归</span></pre></td></tr></table></figure></li>
+<li>线性回归<ul>
+<li>概念：利用数理统计中回归分析，来确定两种或多种变量相互依赖的定量关系的一种统计分析方法</li>
+<li>函数<ul>
+<li>sklearn.linear_model.LinearRegression()</li>
+<li>参数<ul>
+<li>fit_intercept，布尔型参数，表示是否计算该模型截距，可选参数</li>
+<li>normalize，布尔型参数，若为True，则x在回归前进行归一化，可选参数，默认为False</li>
+</ul>
+</li>
+<li>训练方法<ul>
+<li>fit(x, y, sample_weight=None),sample_weight为分配给各个样本的权重数组，一般不需要使用，可省略</li>
+</ul>
+</li>
+<li>实例属性<ul>
+<li>linear.coef_，查看回归方程系数</li>
+<li>linear.intercept_，查看回归方程截距</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>多项式回归<ul>
+<li>概念：<ul>
+<li>研究一个因变量与一个或多个自变量间多项式的回归分析方法。如果自变量只有一个时，称为一元多项式回归；如果自变量有多个时，为多元多项式回归。</li>
+<li>不同于线性回归，多项式回归是使用曲线拟合数据的输入与输出的映射关系</li>
+</ul>
+</li>
+<li>函数<ul>
+<li>sklearn.preprocessing.PolynomialFeatures()</li>
+<li>参数<ul>
+<li>degree，表示建立几次方程</li>
+</ul>
+</li>
+<li>训练方法<ul>
+<li>fit_transform，训练并转化 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>sklearn多项式回归<ul>
+<li>多项式回归实际上是先将变量x处理成多项式特征，然后使用线性模型学习多项式的参数，以达到多项式回归的目的。</li>
+<li>比如x = [x, y]，使用PolynomalFeatures构造x的二次多项式特征x_ploy，则x_poly=[x1, x2, x1x2, x1^2, x2^2]。使用linear_model学习x_poly和之间的线性映射关系，即参数<br>w1x1 + w2x2 + w3x1x2 + w4x1^2 + w5x2^2 = y<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">from sklearn.linear_model import LinearRegression</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">from sklearn.preprocessing import  PolynomialFeatures</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">poly_reg &#x3D; PolynomialFeatures(degree&#x3D;2)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">x_poly &#x3D; poly_reg.fit_transform(datasets_x)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">lin_reg_2 &#x3D; linear_model.LinearRegression()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">lin_reg_2.fit(x_poly, datasets_y)</span></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>岭回归<ul>
+<li>概念：传统的基于最小二乘的线性回归法缺乏稳定性，岭回归是一种专用于共线性数据分析的有偏估计回归方法，是一种改良的最小二乘估计法，对某些数据的拟合要强于最小二乘法</li>
+<li>函数<ul>
+<li>sklearn.linear_model.Ridge()</li>
+<li>参数<ul>
+<li>alpha，正则化因子，对应于损失函数中的alpha</li>
+<li>fit_intercept，表示是否计算截距，需要则为True</li>
+<li>solver，设置计算参数的方法，可选参数’auto’, ‘svd’,’sag’</li>
+</ul>
+</li>
+<li>训练函数<ul>
+<li>clf.score(test_x, test_y)，返回拟合优度</li>
+<li>clf.predict(x)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
       
