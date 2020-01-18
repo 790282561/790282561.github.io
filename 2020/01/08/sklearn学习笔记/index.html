@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Portfolio">
 <meta property="og:description" content="sklearn基础 机器学习的分类：监督学习（有人工标注的标签）、无监督学习（无人工标注）、半监督学习、强化学习、深度学习 scikit-learn：一组简单有效的数据集；依赖numpy, scipy, matplotlib；开源、可复用 sklearn的六个模块：选择模型，数据预处理，分类，回归，聚类，降维 分类任务：最近邻算法，neighbors，Nearest Neighbors，支持向量机">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-01-11T18:00:42.102Z">
+<meta property="og:updated_time" content="2020-01-18T12:17:57.238Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -388,9 +388,11 @@
 <li>手写数字数据集<ul>
 <li>sklearn.datasets.load_digits()</li>
 <li>参数：n_class，表示返回数据的类别，如n_class=5则返回0-4数据样本</li>
-<li>属性：data, target, image  <h2 id="无监督学习-聚类"><a href="#无监督学习-聚类" class="headerlink" title="无监督学习_聚类"></a>无监督学习_聚类</h2></li>
+<li>属性：data, target, image  </li>
 </ul>
 </li>
+</ul>
+<h2 id="无监督学习-聚类"><a href="#无监督学习-聚类" class="headerlink" title="无监督学习_聚类"></a>无监督学习_聚类</h2><ul>
 <li>聚类，就是根据数据的“相似性”将数据分为多类的过程。评估两个不同样本之间的“相似性”，通常使用的方法是计算两样本的“距离”，不同的方法会<br>影响聚类结果的好坏。</li>
 <li>距离计算方法  <table>
 <thead>
@@ -457,11 +459,13 @@
 <li>metric，距离计算方式，可选’euclidean’</li>
 </ul>
 </li>
-<li>训练方法：fit()<h2 id="无监督学习-降维"><a href="#无监督学习-降维" class="headerlink" title="无监督学习_降维"></a>无监督学习_降维</h2></li>
+<li>训练方法：fit()  </li>
 </ul>
 </li>
 </ul>
 </li>
+</ul>
+<h2 id="无监督学习-降维"><a href="#无监督学习-降维" class="headerlink" title="无监督学习_降维"></a>无监督学习_降维</h2><ul>
 <li>降维，在保证数据所具有的代表性特征或者分布的情况下，将高维数据转化为低维数据的过程。用于数据可视化、精简数据。分类和降维之间存在关联，某些高维数据的分类可以通过降维处理更好的获得。同时某些方法，如分类算法k-means与降维算法的NMF之间存在等价性。</li>
 <li>PCA（主成分分析）<ul>
 <li>概念：最常用的降维方法，通常用于高维数据即得探索与可视化，同时可以用作数据压缩和预处理。PCA可以把具有相关性的高维变量合称为线性无关的低维变量，称为主成分。主成分能够尽可能保留原始数据的信息</li>
@@ -563,13 +567,15 @@
 </li>
 <li>训练方法<ul>
 <li>fit(x, y)，训练预处理器</li>
-<li>transform(x)，生成预处理结果<h2 id="监督学习-回归"><a href="#监督学习-回归" class="headerlink" title="监督学习_回归"></a>监督学习_回归</h2></li>
+<li>transform(x)，生成预处理结果  </li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
+</ul>
+<h2 id="监督学习-回归"><a href="#监督学习-回归" class="headerlink" title="监督学习_回归"></a>监督学习_回归</h2><ul>
 <li>概念：目标在于了解两个或多个变数间是否相关，研究其相关方向与强度。回归分为线性和非线性回归。只有一个自变量是简单回归；大于一个变量为多元回归<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sklearn.linear_model  # 线性回归</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">sklearn.preprocessing  # 非线性回归</span></pre></td></tr></table></figure></li>
 <li>线性回归<ul>
 <li>概念：利用数理统计中回归分析，来确定两种或多种变量相互依赖的定量关系的一种统计分析方法</li>
